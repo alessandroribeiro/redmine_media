@@ -1,0 +1,36 @@
+<div class="media_item">
+	<% if media_item.is_audio? %>
+ 	  <p>	
+	    <object type="application/x-shockwave-flash" width="400" height="20"
+           data="/plugin_assets/redmine_media/swf/xspf_player_slim.swf?song_url=<%= media_item.public_filename %>&song_title=<%= media_item.name %>">
+           <param name="movie" 
+            value="/plugin_assets/redmine_media/swf/xspf_player_slim.swf?song_url=<%= media_item.public_filename %>&song_title=<%= media_item.name %>" />
+        </object>
+	  </p>
+	<% end %>		  
+    <% if media_item.is_video_converted? %>
+ 	  <p>Video</p>	
+	<a 
+    href="<%= media_item.public_filename %>" 
+    style="display:block;width:425px;height:300px;" 
+    id="player<%= media_item.id %>"> 
+    </a>
+	<script language="JavaScript"> 
+      flowplayer("player<%= media_item.id %>", 
+	             "/plugin_assets/redmine_media/swf/flowplayer-3.1.2.swf",
+				 { 
+                 	clip: { 
+          
+        			autoPlay: false,  
+        			autoBuffering: false    
+    				} 
+				}); 
+    </script>	
+	<% end %>	
+	<% if media_item.is_video_unconverted? %>
+ 	  <p>Unconverted Video</p>	
+	<% end %>
+
+	Name: <%= media_item.name %><br/>
+	Description: <%= media_item.description %>
+</div>

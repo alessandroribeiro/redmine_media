@@ -1,0 +1,22 @@
+<h2>Media</h2>
+<div class="contextual">
+<%= link_to l("New media file"),
+              {:project_id => @project},
+               :class => 'icon icon-add',
+               :onclick => 'Element.show("add-media"); return false;' %>
+</div>
+
+<div id="add-media" style="display:none;">
+<% form_tag({:controller => 'media', :action => 'index'}, 
+    :class => "tabular", :multipart => true) do %>
+ <div class="box">
+ <p><label><%=l(:label_attachment_plural)%></label><%= render :partial => 'form' %></p>
+ </div>
+	
+<%= submit_tag l(:button_create) %>
+<%= link_to l(:button_cancel), "#", :onclick => 'Element.hide("add-media")' %>
+<% end %>
+</div>
+<div id="media-list">
+	  <%= render :partial => "media_item", :collection => @media_files %>
+</div>	

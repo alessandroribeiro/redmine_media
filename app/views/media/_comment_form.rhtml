@@ -1,0 +1,8 @@
+<span id="attachments_fields">
+<%= text_field_tag 'comment[title]', '', :size => 60, :id => nil %>
+<em><%= l("title") %></em><br/>
+<%= text_area_tag 'comment[body]', '', :cols => 60, :id => nil %>
+<%= hidden_field_tag 'comment[media_file_id]', @media_file.id %>
+<em><%= l("body") %></em>
+</span>
+<br />

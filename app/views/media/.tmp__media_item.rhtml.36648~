@@ -1,0 +1,5 @@
+<div class="media_item">
+	<h4>Video</h4>
+	Name: <%= media_item.name %><br/>
+	Description: <%= media_item.description %>
+</div>

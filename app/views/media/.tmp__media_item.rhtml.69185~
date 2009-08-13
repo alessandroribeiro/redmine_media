@@ -1,0 +1,10 @@
+<div class="media_item">
+	<% if media_item.content_type=="audio/mpeg" %>
+ 	  <p>Audio</p>		
+    <% else if media_item.content_type=="video/x-flv" %>
+ 	  <p>Video</p>		
+	<% end %>	
+	
+	Name: <%= media_item.name %><br/>
+	Description: <%= media_item.description %>
+</div>

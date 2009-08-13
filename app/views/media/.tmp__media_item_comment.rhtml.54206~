@@ -1,0 +1,5 @@
+
+<h4> Comments </h4>
+
+<%= render :partial => "media_item_comment", :collection => @media_file.media_file_comments %>
+

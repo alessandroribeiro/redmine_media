@@ -1,0 +1,23 @@
+
+<h4> Comments </h4>
+<div class="contextual">
+<%= link_to l("New comment"),
+              {:media_file_id => @media_file.id},
+               :class => 'icon icon-add',
+               :onclick => 'Element.show("add-comment"); return false;' %>
+</div>
+
+<div id="add-comment" style="display:none;">
+<% form_tag({:controller => 'media', :action => 'add_comment'}, 
+    :class => "tabular", :multipart => true) do %>
+ <div class="box">
+ <p><%= render :partial => 'comment_form' %></p>
+ </div>
+	
+<%= submit_tag l(:button_create) %>
+<%= link_to l(:button_cancel), "#", :onclick => 'Element.hide("add-comment")' %>
+<% end %>
+</div>
+
+<%= render :partial => "media_item_comment", :collection => @media_file.media_file_comments %>
+
