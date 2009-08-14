@@ -1,0 +1,17 @@
+<h2>Edit Media</h2>
+
+<% form_for :media_file, @media_file, :url => { :action => "update", :id=>@media_file.id }, :class => "tabular"  do |f| %>
+
+ <div class="box">
+ 	
+<span id="attachments_fields">
+<%= f.text_field :name, :size => 60 %>
+<em><%= l("name") %></em><br/>
+<%= f.text_area :description, :cols => 60 %>
+<em><%= l("description") %></em>
+</span>
+<br />
+	
+<%= submit_tag l(:button_update) %>
+<% end %>
+	

@@ -3,11 +3,6 @@
 
 
 <h2>Media</h2>
-<%= error_messages_for :media_file %>
-<% if flash[:notice] %>
-  <div class="notice"><%= flash[:notice] %></div>
-<% end %>
-
 <div class="contextual">
 <%= link_to l("New media file"),
               {:project_id => @project},
@@ -16,7 +11,7 @@
 </div>
 
 <div id="add-media" style="display:none;">
-<% form_tag({:controller => 'media', :action => 'upload', :id=>@project.identifier}, 
+<% form_tag({:controller => 'media', :action => 'index'}, 
     :class => "tabular", :multipart => true) do %>
  <div class="box">
  <p><label><%=l(:label_attachment_plural)%></label><%= render :partial => 'form' %></p>

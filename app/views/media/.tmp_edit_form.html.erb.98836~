@@ -1,0 +1,17 @@
+<h2>Edit Media</h2>
+
+<% form_tag({:controller => 'media', :action => 'update', :id=>@project.identifier}, 
+    :class => "tabular", :multipart => true) do %>
+ <div class="box">
+ 	
+<span id="attachments_fields">
+<%= text_field_tag 'original[name]', '', :size => 60, :id => nil %>
+<em><%= l("name") %></em><br/>
+<%= text_area_tag 'original[description]', '', :cols => 60, :id => nil %>
+<em><%= l("description") %></em>
+</span>
+<br />
+	
+<%= submit_tag l(:button_create) %>
+<% end %>
+	

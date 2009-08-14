@@ -14,9 +14,7 @@
 	<a 
     href="<%= @media_file.public_filename_after_conversion %>" 
     style="display:block;width:800px;height:600px" 
-    id="player<%= @media_file.id %>" >
-	  <!--img width="800" height="600" src="<%= @media_file.public_filename_for_thumb %>" /-->
-    </a>
+    id="player<%= @media_file.id %>" ></a>
 	<script language="JavaScript"> 
       flowplayer("player<%= @media_file.id %>", 
 	             "/plugin_assets/redmine_media/swf/flowplayer-3.1.2.swf",

@@ -1,0 +1,33 @@
+<script src="/plugin_assets/redmine_media/javascripts/flowplayer-3.1.2.min.js">
+</script>
+<div class="media_item">
+    <% if @media_file.is_audio? %>
+    <p>
+        <object type="application/x-shockwave-flash" width="400" height="20" data="/plugin_assets/redmine_media/swf/xspf_player_slim.swf?song_url=<%= @media_file.public_filename %>&song_title=<%= @media_file.name %>">
+            <param name="movie" value="/plugin_assets/redmine_media/swf/xspf_player_slim.swf?song_url=<%= @media_file.public_filename %>&song_title=<%= @media_file.name %>" />
+        </object>
+    </p><% end %>
+    <% if @media_file.is_video? %>
+    <% if @media_file.converted? %>
+    <a href="<%= @media_file.public_filename_after_conversion %>" style="display:block;width:800px;height:600px" id="player<%= @media_file.id %>"></a>
+    <script language="JavaScript">
+        flowplayer("player<%= @media_file.id %>", "/plugin_assets/redmine_media/swf/flowplayer-3.1.2.swf", {
+            clip: {
+            
+                autoPlay: false,
+                autoBuffering: false
+            }
+        });
+    </script>
+    <% end %>
+    <% if !@media_file.converted? %>
+    <p>
+        Unconverted Video
+    </p>
+    <% end %>
+    <% end %>
+    Name: <%= @media_file.name %>
+    <br/>
+    Description: <%= @media_file.description %>
+    <%= render :partial => "media_item_comment_area" %>
+</div>

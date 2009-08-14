@@ -1,5 +1,5 @@
 class MediaFile < ActiveRecord::Base
-  has_attachment :storage => :file_system, :max_size => 50.megabytes
+  has_attachment :storage => :file_system, :max_size => 50.megabytes, :content_type => ["audio/mpeg","video/x-flv", "video/x-msvideo", "video/mpeg", "video/x-ms-wmv"]
   
   belongs_to :user
   belongs_to :project
@@ -20,6 +20,28 @@ class MediaFile < ActiveRecord::Base
       return true
     end
     return false
+  end
+
+  def is_mpeg?
+    if content_type == "video/mpeg"
+      return true
+    end
+    return false
+  end
+
+  def is_wmv?
+    if content_type == "video/x-ms-wmv"
+      return true
+    end
+    return false
+  end
+  
+  def is_video_and_needs_conversion?
+    return (is_avi? or is_mpeg? or is_wmv?)
+  end
+  
+  def is_video?
+    return (is_flv? or is_video_and_needs_conversion?)
   end
   
   def is_audio?
@@ -55,14 +77,14 @@ class MediaFile < ActiveRecord::Base
   end
 
   def public_filename_after_conversion
-    if is_avi?
+    if is_video_and_needs_conversion?
       return "#{public_filename}.flv"
     end
     return public_filename
   end
 
   def public_filename_for_thumb
-    if is_avi? or is_flv?
+    if is_video_and_needs_conversion? or is_flv?
       return "#{public_filename}.thumb.jpg"
     end
     return public_filename

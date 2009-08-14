@@ -1,0 +1,38 @@
+<tr class="media_item">
+	<% if media_item.is_audio? %>
+     <td width="212">
+     	<a href="/media/view/<%= media_item.id %>"><img src="/plugin_assets/redmine_media/images/thumb_audio.png" width="212" height="150"/></a>		
+	 </td>
+	<% else %>
+    <% if media_item.converted? %>
+     <td width="212">
+     	<% if media_item.thumb_created? %>
+     		<a href="/media/view/<%= media_item.id %>"><img src="<%= media_item.public_filename_for_thumb %>" width="212" height="150"/></a>		
+		<% else %>
+	 		<a href="/media/view/<%= media_item.id %>"><img src="/plugin_assets/redmine_media/images/thumb_audio.png" width="212" height="150"/></a>			
+		<% end %>
+	 </td>
+	 <% end %>
+	<% if !media_item.converted? %>
+     <td width="212">
+     	<img src="/plugin_assets/redmine_media/images/thumb_conversion_in_progress.png" width="212" height="150"/>		
+	 </td>
+    <% end %>
+	<% end %>
+
+	<% if media_item.converted? %>	
+	 	<td valign="top">
+			<a href="/media/view/<%= media_item.id %>"><span id="media_item_name"><%= media_item.name %></span></a> (by <%= media_item.user.login %> ) (<%= media_item.media_file_comments.size %> comments )
+			<br/>
+			<%= media_item.description %>  	
+	    	<br/><br/>
+			(edit)(<a href="/media/remove/<%= media_item.id %>">remove</a>)
+    	</td>	 
+    <% else %>	
+	 <td valign="top">
+		<span id="media_item_name"><%= media_item.name %></span> (by <%= media_item.user.login %> ) 
+		<br/>
+		<%= media_item.description %>  	
+  	</td>
+	<% end %>	
+</tr>

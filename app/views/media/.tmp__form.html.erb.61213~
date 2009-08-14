@@ -6,6 +6,4 @@
 <em><%= l("description") %></em>
 </span>
 <br />
-<small><%= link_to l(:label_add_another_file), '#', :onclick => 'addFileField(); return false;' %>
-(<%= l(:label_max_size) %>: <%= number_to_human_size(Setting.attachment_max_size.to_i.kilobytes) %>)
-</small>
+Files accepted: mp3,flv,avi,mpg and wmv, up to 50M. Avi, mpg and wmv files are converted internally to flv.
