@@ -9,7 +9,7 @@
      	<% if media_item.thumb_created? %>
      		<a href="/media/view/<%= media_item.id %>"><img src="<%= media_item.public_filename_for_thumb %>" width="212" height="150"/></a>		
 		<% else %>
-	 		<a href="/media/view/<%= media_item.id %>"><img src="/plugin_assets/redmine_media/images/thumb_audio.png" width="212" height="150"/></a>			
+	 		<a href="/media/view/<%= media_item.id %>"><img src="/plugin_assets/redmine_media/images/thumb_conversion_in_progress.png" width="212" height="150"/></a>			
 		<% end %>
 	 </td>
 	 <% end %>

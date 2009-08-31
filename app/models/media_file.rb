@@ -1,5 +1,5 @@
 class MediaFile < ActiveRecord::Base
-  has_attachment :storage => :file_system, :max_size => 50.megabytes, :content_type => ["audio/mpeg","video/x-flv", "video/x-msvideo", "video/mpeg", "video/x-ms-wmv"]
+  has_attachment :storage => :file_system, :max_size => 50.megabytes, :content_type => ["audio/mpeg","video/x-flv", "video/x-msvideo", "video/mpeg", "video/x-ms-wmv", "video/quicktime"]
   
   belongs_to :user
   belongs_to :project
@@ -35,9 +35,16 @@ class MediaFile < ActiveRecord::Base
     end
     return false
   end
-  
+
+  def is_mov?
+    if content_type == "video/quicktime"
+      return true
+    end
+    return false
+  end
+
   def is_video_and_needs_conversion?
-    return (is_avi? or is_mpeg? or is_wmv?)
+    return (is_avi? or is_mpeg? or is_wmv? or is_mov?)
   end
   
   def is_video?
@@ -159,9 +166,11 @@ class MediaFile < ActiveRecord::Base
     @flv_filename = "#{@original_video_filename}.flv"
     @flv_url = "#{public_filename}.flv"
     
-    command = <<-end_command
-      /opt/ffmpeg/ffmpeg -i #{@original_video_filename} #{@flv_filename}
-    end_command
+    if is_mov?
+      command = "/opt/ffmpeg/ffmpeg -i #{@original_video_filename} -target ntsc-dvd #{@flv_filename}"        
+    else
+      command = "/opt/ffmpeg/ffmpeg -i #{@original_video_filename} #{@flv_filename}"
+    end
     command.gsub!(/\s+/, " ")
   end
 
@@ -169,9 +178,12 @@ class MediaFile < ActiveRecord::Base
     @original_video_filename = File.expand_path "public#{public_filename}"
     @thumb_filename = "#{@original_video_filename}.thumb.jpg"
     
-    command = <<-end_command
-      /opt/ffmpeg/ffmpeg -i #{@original_video_filename} -f mjpeg -s 320x240 -ss 1 -vframes 1 #{@thumb_filename}
-    end_command
+    if is_mov?
+      command = "/opt/ffmpeg/ffmpeg -i #{@original_video_filename} -target ntsc-dvd -f mjpeg -s 320x240 -ss 1 -vframes 1 #{@thumb_filename}"      
+    else
+      command = "/opt/ffmpeg/ffmpeg -i #{@original_video_filename} -f mjpeg -s 320x240 -ss 1 -vframes 1 #{@thumb_filename}"
+    end
+  
     command.gsub!(/\s+/, " ")
   end
 
