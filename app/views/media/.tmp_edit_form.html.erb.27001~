@@ -1,5 +1,3 @@
-<%= stylesheet_link_tag 'redmine_media', :plugin => "redmine_media" %>
-
 <h2>Edit Media</h2>
 
 <% form_for :media_file, @media_file, :url => { :action => "update", :id=>@media_file.id }, :class => "tabular"  do |f| %>

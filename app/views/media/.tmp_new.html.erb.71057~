@@ -1,5 +1,3 @@
-<%= stylesheet_link_tag 'redmine_media', :plugin => "redmine_media" %>
-
 <h2>Media</h2>
 <div class="contextual">
 <%= link_to l("New media file"),

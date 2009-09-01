@@ -1,9 +1,6 @@
-<%= stylesheet_link_tag 'redmine_media', :plugin => "redmine_media" %>
-
 <script src="/plugin_assets/redmine_media/javascripts/flowplayer-3.1.2.min.js">
 </script>
 <div class="media_item">
-	<p class="view_media_item_name"><%= @media_file.name %></p>
     <% if @media_file.is_audio? %>
     <p>
         <object type="application/x-shockwave-flash" width="400" height="20" data="/plugin_assets/redmine_media/swf/xspf_player_slim.swf?song_url=<%= @media_file.public_filename %>&song_title=<%= @media_file.name %>">
@@ -29,8 +26,8 @@
     </p>
     <% end %>
     <% end %>
-	<p class="view_media_item_author">created on <%= @media_file.created_on.strftime('%b %d, %Y') %> by <%= @media_file.user.login %></p>
+    Name: <%= @media_file.name %>
     <br/>
-    <%= @media_file.description %>
+    Description: <%= @media_file.description %>
     <%= render :partial => "media_item_comment_area" %>
 </div>
