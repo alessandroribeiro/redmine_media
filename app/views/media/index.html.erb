@@ -27,6 +27,14 @@
 <%= link_to l(:button_cancel), "#", :onclick => 'Element.hide("add-media")' %>
 <% end %>
 </div>
+<div class="media_files_counter">
+ <% if @media_files.size ==1 %>1 Media File
+ <% end %>
+ <% if @media_files.size >1 %>
+     <%= @media_files.size %> Media Files
+ <% end %>
+
+</div>
 <div id="media-list">
 	<table>
 	  <%= render :partial => "media_item", :collection => @media_files %>		
