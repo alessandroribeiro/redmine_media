@@ -4,7 +4,7 @@
 
 
 <h2>Media</h2>
-<!--= flash[:error] -->
+<%= error_messages_for :media_file %>
 
 <div class="contextual">
 <%= link_to l("New media file"),

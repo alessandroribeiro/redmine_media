@@ -34,6 +34,7 @@ class MediaController < ApplicationController
     begin
       @media.save!
     rescue
+      flash[:error] = "Could not upload file.  Please verify the file size and type."
       redirect_to("/media/index/" + params[:id])
       return
     end
