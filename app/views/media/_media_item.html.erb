@@ -22,13 +22,12 @@
 
 	<% if media_item.converted? %>	
 	 	<td valign="top">
-			<a href="/media/view/<%= media_item.id %>"><span id="media_item_name"><%= media_item.name %></span></a> 
-			  (by <%= media_item.user.login %> ) 
-			  (<%= media_item.media_file_comments.size %> comments )
+			<a href="/media/view/<%= media_item.id %>"><span id="media_item_name"><%= media_item.name %></span></a><br/> 
+			  by <%= media_item.user.login %> <br/>
 			  <% time_past = media_item.time_past %>
-			  (created <%= time_past[0].to_i %> <%= time_past[1] %> ago)
-			<br/>
-			<%= media_item.description %>  	
+			  created <%= time_past[0].to_i %> <%= time_past[1] %> ago<br/>			  
+			<span id="media_item_comments"><%= number_of_comments media_item  %></span><br/>			
+			<span id="media_item_views"><%= number_of_views media_item  %></span><br/>			
 	    	<br/><br/>
 			<% if media_item.can_be_edited_by? User.current %>
 				(<a href="/media/edit_form/<%= media_item.id %>">edit</a>)
@@ -37,9 +36,9 @@
     	</td>	 
     <% else %>	
 	 <td valign="top">
-		<span id="media_item_name"><%= media_item.name %></span> (by <%= media_item.user.login %> ) 
+		<span id="media_item_name"><%= media_item.name %></span>
+		<br/> by <%= media_item.user.login %>  
 		<br/>
-		<%= media_item.description %>  	
   	</td>
 	<% end %>	
 </tr>

@@ -7,6 +7,7 @@ class MediaFile < ActiveRecord::Base
   belongs_to :project
   
   has_many :media_file_comments, :order => 'created_on DESC'
+  has_many :media_file_views
   
   validates_as_attachment
   
@@ -111,7 +112,7 @@ class MediaFile < ActiveRecord::Base
   end
 
   def time_past
-    diff_in_seconds = Time.now - created_on
+    diff_in_seconds = (Time.now - created_on).to_i
     if (diff_in_seconds<60) 
       if diff_in_seconds==1
         return [diff_in_seconds,"second"]
@@ -119,7 +120,7 @@ class MediaFile < ActiveRecord::Base
       return [diff_in_seconds,"seconds"]
     end
     
-    diff_in_minutes = diff_in_seconds/60    
+    diff_in_minutes = (diff_in_seconds/60).to_i    
     if (diff_in_minutes<60)
       if diff_in_minutes==1
         return [diff_in_minutes,"minute"]
@@ -127,7 +128,7 @@ class MediaFile < ActiveRecord::Base
       return [diff_in_minutes,"minutes"]
     end
     
-    diff_in_hours = diff_in_minutes/60
+    diff_in_hours = (diff_in_minutes/60).to_i
     if (diff_in_hours<60)
       if diff_in_hours==1
         return [diff_in_hours,"hour"]
@@ -135,7 +136,7 @@ class MediaFile < ActiveRecord::Base
       return [diff_in_hours,"hours"]
     end
     
-    diff_in_days = diff_in_hours/24
+    diff_in_days = (diff_in_hours/24).to_i
     if (diff_in_days<30)
       if diff_in_days==1
         return [diff_in_days,"day"]
@@ -143,7 +144,7 @@ class MediaFile < ActiveRecord::Base
       return [diff_in_days,"days"]
     end
     
-    diff_in_months = diff_in_days/30
+    diff_in_months = (diff_in_days/30).to_i
     if (diff_in_months<12)
       if diff_in_months==1
         return [diff_in_months,"month"]
@@ -151,7 +152,7 @@ class MediaFile < ActiveRecord::Base
       return [diff_in_months,"months"]
     end
     
-    diff_in_years = diff_in_months/12
+    diff_in_years = (diff_in_months/12).to_i
     if diff_in_years==1
       return [diff_in_years,"year"]
     end
@@ -159,6 +160,17 @@ class MediaFile < ActiveRecord::Base
     return [diff_in_years,"years"]
     
   end
+
+  def unique_viewers_list
+    users = []
+    for view in media_file_views
+      if !(users.include? view.user)
+        users << view.user
+      end
+    end
+    users
+  end
+
 
   protected
 

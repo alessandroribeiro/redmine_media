@@ -9,6 +9,9 @@ class MediaController < ApplicationController
   def view
     @media_file = MediaFile.find(params[:id])
     @project = @media_file.project
+    if User.current!=nil
+      MediaFileView.add_view User.current,@media_file
+    end
     puts "media_file = #{@media_file}"    
   end
   

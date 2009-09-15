@@ -1,12 +1,10 @@
+<%= stylesheet_link_tag 'redmine_media', :plugin => "redmine_media" %>
 
 <script src="/plugin_assets/redmine_media/javascripts/flowplayer-3.1.2.min.js"></script>
 
 
 <h2>Media</h2>
-<%= error_messages_for :media_file %>
-<% if flash[:notice] %>
-  <div class="notice"><%= flash[:notice] %></div>
-<% end %>
+<!--= flash[:error] -->
 
 <div class="contextual">
 <%= link_to l("New media file"),
@@ -25,6 +23,14 @@
 <%= submit_tag l(:button_create) %>
 <%= link_to l(:button_cancel), "#", :onclick => 'Element.hide("add-media")' %>
 <% end %>
+</div>
+<div class="media_files_counter">
+ <% if @media_files.size ==1 %>1 Media File
+ <% end %>
+ <% if @media_files.size >1 %>
+     <%= @media_files.size %> Media Files
+ <% end %>
+
 </div>
 <div id="media-list">
 	<table>
