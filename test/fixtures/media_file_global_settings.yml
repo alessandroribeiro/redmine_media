@@ -1,0 +1,23 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+one:
+  id: 1
+  name: key
+  value: abc
+two:
+  id: 2
+  name: access_key_id
+  value: 146Z4BQFX3ZKA8R04PG2
+three:
+  id: 3
+  name: secret_access_key
+  value: Qo/t8fV7WZLwGwKKViJmz736AiKAIH76QyJtUYXr
+four:
+  id: 4
+  name: redmine_bucket
+  value: integritas/redmine
+five:
+  id: 5
+  name: redmine_dir
+  value: /disk2/redmine-0.8
+
+  

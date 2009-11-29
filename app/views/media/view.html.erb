@@ -18,7 +18,8 @@
             clip: {
             
                 autoPlay: false,
-                autoBuffering: false
+                autoBuffering: false,
+				onStart: function(clip){alert("Clip "+ clip.url);}
             }
         });
     </script>

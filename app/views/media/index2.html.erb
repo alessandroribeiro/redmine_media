@@ -1,0 +1,107 @@
+<%= stylesheet_link_tag 'redmine_media', :plugin => "redmine_media" %>
+<%= javascript_include_tag 'swfupload', :plugin => "redmine_media" %>
+<%= javascript_include_tag 'handlers', :plugin => "redmine_media" %>
+<%= stylesheet_link_tag 'swfupload', :plugin => "redmine_media" %>
+
+
+<script src="/plugin_assets/redmine_media/javascripts/flowplayer-3.1.2.min.js"></script>
+
+
+<h2>Media</h2>
+
+<div class="contextual">
+<%= link_to l("New media file"),
+              {:project_id => @project},
+               :class => 'icon icon-add',
+               :onclick => 'Element.show("add-media"); return false;' %>
+</div>
+
+<div id="add-media" style="display:none;">
+<script type='text/javascript'>
+  var swfu;
+
+  window.onload = function () {
+    swfu = new SWFUpload({
+      // Create the custom swfupload_photos_path in the routes.rb file
+      upload_url : "upload",
+      // flash_url : '/assets/swfupload_f9.swf',
+
+      file_size_limit : '100 MB',
+      file_types : '*.avi;*.mov;*.wmv;*.mpg;*.mp3',
+      file_types_description : 'Video and Audio Files',
+      file_upload_limit : '1',
+
+      file_queue_error_handler : fileQueueError,
+      file_dialog_complete_handler : fileDialogComplete,
+      upload_progress_handler : uploadProgress,
+      upload_error_handler : uploadError,
+      upload_success_handler : uploadSuccess,
+      upload_complete_handler : uploadComplete,
+
+      custom_settings : { 
+        upload_target : 'divFileProgressContainer'
+      },
+
+			// Button Settings
+			button_image_url : "/plugin_assets/redmine_media/images/spyglass.png",
+			button_placeholder_id : "spanButtonPlaceholder",
+			button_width: 180,
+			button_height: 18,
+			button_text : '<span class="button">Select Media Files <span class="buttonSmall">(100 MB Max)</span></span>',
+			button_text_style : '.button { font-family: Helvetica, Arial, sans-serif; font-size: 12pt; } .buttonSmall { font-size: 10pt; }',
+			button_text_top_padding: 0,
+			button_text_left_padding: 18,
+			button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+			button_cursor: SWFUpload.CURSOR.HAND,
+
+			// Flash Settings
+			flash_url : "/plugin_assets/redmine_media/swf/swfupload.swf",
+
+			custom_settings : {
+				upload_target : "divFileProgressContainer"
+			},
+
+      debug: false
+
+    });
+  };
+</script>
+
+<div style="margin: 0px 10px;">
+	<div>
+		<form>
+  		<div style="display: inline; border: solid 1px #7FAAFF; background-color: #C5D9FF; padding: 2px;">
+  			<span id="spanButtonPlaceholder"></span>
+  		</div>
+		</form>
+	</div>
+	<div id="divFileProgressContainer" style="height: 75px;"></div>
+	<div id="thumbnails"></div>
+</div>
+
+<% form_tag({:controller => 'media', :action => 'upload', :id=>@project.identifier}, 
+    :class => "tabular", :multipart => true) do %>
+ <div class="box">
+ <p><label><%=l(:label_attachment_plural)%></label><%= render :partial => 'form' %></p>
+ </div>
+	
+<%= submit_tag l(:button_create) %>
+<%= link_to l(:button_cancel), "#", :onclick => 'Element.hide("add-media")' %>
+<% end %>
+</div>
+
+
+
+<div class="media_files_counter">
+ <% if @media_files.size ==1 %>1 Media File
+ <% end %>
+ <% if @media_files.size >1 %>
+     <%= @media_files.size %> Media Files
+ <% end %>
+
+</div>
+<div id="media-list">
+	<table>
+	  <%= render :partial => "media_item", :collection => @media_files %>		
+	</table>
+</div>	

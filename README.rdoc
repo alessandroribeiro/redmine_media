@@ -1,3 +1,10 @@
 = media
 
 Description goes here
+
+= Gems that must be installed
+
+aws-s3
+mocha
+
+

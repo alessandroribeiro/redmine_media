@@ -1,5 +1,29 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 first:
   id: 1
+  content_type: "video/x-flv"
+  filename: "test.flv"
+  size: 1000000
+  thumbnail: "test.png"
+  created_on: 10/10/2009
+  updated_on: 10/10/2009
+  name: "test"
+  description: "just a test"
+  project_id: 1
+  user_id: 1
+  converted: false
+  thumb_created: false
 another:
   id: 2
+  content_type: "video/x-msvideo"
+  filename: "test2.avi"
+  size: 1000000
+  thumbnail: "test2.png"
+  created_on: 8/8/2009
+  updated_on: 8/8/2009
+  name: "test2"
+  description: "another test"
+  project_id: 1
+  user_id: 1
+  converted: false
+  thumb_created: false

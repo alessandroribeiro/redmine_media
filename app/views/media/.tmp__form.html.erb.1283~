@@ -1,9 +1,0 @@
-<span id="attachments_fields">
-<%= file_field_tag 'original[uploaded_data]', :size => 30, :id => nil  -%><br/>
-<%= text_field_tag 'original[name]', '', :size => 60, :id => nil %>
-<em><%= l("name") %></em><br/>
-<%= text_area_tag 'original[description]', '', :cols => 60, :id => nil %>
-<em><%= l("description") %></em>
-</span>
-<br />
-Files accepted: mp3,flv,avi,mpg and wmv, up to 50M. Avi, mpg and wmv files are converted internally to flv.
