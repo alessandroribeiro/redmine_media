@@ -4,7 +4,6 @@ class MediaController < ApplicationController
     @project = Project.find_by_identifier(params[:id])
     if (User.current!=nil) and (@project.users.include? User.current)!=nil
       @media_files = MediaFile.find_all_by_project_id @project.id, :order=>"created_on DESC" # @project.polls
-      puts "media_files = #{@media_files}"
     else
       render :action=>:not_allowed
     end
@@ -14,7 +13,6 @@ class MediaController < ApplicationController
     @project = Project.find_by_identifier(params[:id])
     if (User.current!=nil) and (@project.users.include? User.current)!=nil
       @media_files = MediaFile.find_all_by_project_id @project.id, :order=>"created_on DESC" # @project.polls
-      puts "media_files = #{@media_files}"
     else
       render :action=>:not_allowed
     end
@@ -26,12 +24,10 @@ class MediaController < ApplicationController
     if User.current!=nil
       MediaFileView.add_view User.current,@media_file
     end
-    puts "media_file = #{@media_file}"    
   end
   
   def add_comment
     comment = MediaFileComment.new
-    #comment.title = params[:comment][:title]
     comment.body = params[:comment][:body]
     comment.user = User.current
     comment.media_file = MediaFile.find params[:comment][:media_file_id]
@@ -44,10 +40,11 @@ class MediaController < ApplicationController
     @media = MediaFile.new(params[:original])  
     @media.project = @project
     @media.user = User.current
-    @media.converted = false
-    if @media.is_audio? or @media.is_flv?
-      @media.converted = true
+    @media.storage_method = MediaFileGlobalSettings.default_storage_method
+    if @media.storage_method == "s3"
+      @media.s3_bucket = MediaFileGlobalSettings.s3_bucket
     end
+
     begin
       @media.save!
     rescue
@@ -55,14 +52,10 @@ class MediaController < ApplicationController
       redirect_to("/media/index/" + params[:id])
       return
     end
-    
-    if @media.is_video_and_needs_conversion?
-      @media.send_later(:generate_thumb)
-      @media.send_later(:convert)
-    end
-    if @media.is_flv?
-      @media.send_later(:generate_thumb)
-    end
+
+    @media.send_later(:generate_thumb_and_copy_to_destination)
+    @media.send_later(:convert_and_copy_to_destination)
+
     flash[:notice] = "Successfully added media file"
     redirect_to("/media/index/" + params[:id])
   end

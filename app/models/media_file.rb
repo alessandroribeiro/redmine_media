@@ -61,31 +61,91 @@ class MediaFile < ActiveRecord::Base
     return false
   end
   
-    # This method is called from the controller and takes care of the converting
+  
+  
+  # This method is called from the controller and takes care of the converting
   def convert
-    #self.convert!
-    success = system(convert_command)
+    success = system(convert_command + " > conversion.log")
     if success && $?.exitstatus == 0
-      #update_after_conversion
-      update_attribute(:converted,true)
-      puts "file converted"
-    else
-      puts "file not converted"
+      local_path_util = LocalMediaPathUtil.new      
+      file_dir = local_path_util.local_media_complete_dir(id)
+      t_local_path = file_dir + "/" + filename + ".flv"
+      update_attribute(:converted_media_local_path,t_local_path)
     end
   end
+
+
+  def convert_and_copy_to_destination
+    if is_video_and_needs_conversion?
+      convert
+    else
+      local_path_util = LocalMediaPathUtil.new      
+      t_local_path = local_path_util.local_media_complete_path(id,filename)
+      update_attribute(:converted_media_local_path,t_local_path)      
+    end
+    if MediaFileGlobalSettings.default_storage_method=="s3"
+      s3_manager = S3MediaFileManager.new
+      local_path_util = LocalMediaPathUtil.new
+      s3_path_util = S3MediaPathUtil.new      
+      origin_filename = local_path_util.local_media_complete_path(id,filename)
+      t_s3_media_path = s3_path_util.s3_key_for_file(id,filename)      
+      if is_video_and_needs_conversion?
+        origin_filename =  "#{origin_filename}.flv"
+        t_s3_media_path = "#{t_s3_media_path}.flv"
+      end      
+      s3_manager.init
+      s3_manager.copy_to_s3(id,origin_filename)
+      update_attribute(:s3_media_path,t_s3_media_path) 
+
+      puts "after transfer to s3"
+    end
+  end
+
 
   def generate_thumb
-    #self.convert!
-    success = system(thumb_command)
+    success = system(thumb_command + " > thumb_creation.log")
     if success && $?.exitstatus == 0
-      #update_after_conversion
-      update_attribute(:thumb_created,true)
-      puts "thumb created"
-    else
-      puts "thumb not created"
+      local_path_util = LocalMediaPathUtil.new      
+      thumb_file_dir = local_path_util.local_media_complete_dir(id)
+      t_local_path = thumb_file_dir + "/" + filename + ".thumb.jpg"
+      update_attribute(:thumb_local_path,t_local_path)
+    end    
+  end
+
+
+  def generate_thumb_and_copy_to_destination
+    if is_video_and_needs_conversion? or is_flv?
+      generate_thumb
+      if storage_method=="s3"
+        s3_manager = S3MediaFileManager.new
+        s3_path_util = S3MediaPathUtil.new
+        s3_manager.init
+        s3_manager.copy_to_s3(id,@thumb_filename)
+        t_s3_thumb_path = s3_path_util.s3_key_for_file(id,@thumb_filename)
+        update_attribute(:s3_thumb_path,t_s3_thumb_path) 
+      else        
+        thumb_local_path = compute_original_local_filename + ".thumb.jpg"
+      end
     end
   end
 
+  def converted?
+    if (storage_method=="filesystem" and converted_media_local_path!=nil) or (storage_method=="s3" and s3_media_path!=nil)
+      return true
+    end    
+    false
+  end
+
+  def thumb_created?
+    if is_audio?
+      return true
+    end
+    if (storage_method=="filesystem" and thumb_local_path!=nil) or (storage_method=="s3" and s3_thumb_path!=nil)
+      return true
+    end        
+  end
+  
+  
   def public_filename_after_conversion
     if is_video_and_needs_conversion?
       return "#{public_filename}.flv"
@@ -171,36 +231,63 @@ class MediaFile < ActiveRecord::Base
     users
   end
 
-
-  protected
+  def compute_original_local_filename
+    local_path_util = LocalMediaPathUtil.new      
+    @local_filename = local_path_util.local_media_complete_path(id,filename)
+  end
 
   # This method creates the ffmpeg command that we'll be using
   def convert_command
-    @original_video_filename = File.expand_path "public#{public_filename}"
+    @original_video_filename = compute_original_local_filename
     @flv_filename = "#{@original_video_filename}.flv"
     @flv_url = "#{public_filename}.flv"
     
     if is_mov?
-      command = "/opt/ffmpeg/ffmpeg -i #{@original_video_filename} -target ntsc-dvd #{@flv_filename}"        
+      command = "/opt/ffmpeg/ffmpeg -y -i #{@original_video_filename} -target ntsc-dvd #{@flv_filename}"        
     else
-      command = "/opt/ffmpeg/ffmpeg -i #{@original_video_filename} #{@flv_filename}"
+      command = "/opt/ffmpeg/ffmpeg -y -i #{@original_video_filename} #{@flv_filename}"
     end
     command.gsub!(/\s+/, " ")
   end
 
   def thumb_command
-    @original_video_filename = File.expand_path "public#{public_filename}"
+    @original_video_filename = compute_original_local_filename
     @thumb_filename = "#{@original_video_filename}.thumb.jpg"
     
     if is_mov?
-      command = "/opt/ffmpeg/ffmpeg -i #{@original_video_filename} -target ntsc-dvd -f mjpeg -s 320x240 -ss 1 -vframes 1 #{@thumb_filename}"      
+      command = "/opt/ffmpeg/ffmpeg -y -i #{@original_video_filename} -target ntsc-dvd -f mjpeg -s 320x240 -ss 1 -vframes 1 #{@thumb_filename}"      
     else
-      command = "/opt/ffmpeg/ffmpeg -i #{@original_video_filename} -f mjpeg -s 320x240 -ss 1 -vframes 1 #{@thumb_filename}"
+      command = "/opt/ffmpeg/ffmpeg -y -i #{@original_video_filename} -f mjpeg -s 320x240 -ss 1 -vframes 1 #{@thumb_filename}"
     end
-  
     command.gsub!(/\s+/, " ")
   end
 
+  def media_url
+    if storage_method=="filesystem"
+      return public_filename_after_conversion
+    else  
+      s3_manager = S3MediaFileManager.new
+      s3_manager.init
+      three_hours = 3*60*60
+      url = s3_manager.url_for_s3(id,filename,three_hours)
+      return url
+    end
+  end
+
+  def thumb_url
+    if storage_method=="filesystem"
+      return public_filename_for_thumb
+    else  
+      s3_manager = S3MediaFileManager.new
+      s3_manager.init
+      three_hours = 3*60*60
+      url = s3_manager.url_for_s3(id,filename + ".thumb.jpg",three_hours)
+      return url
+    end
+  end
+
+  protected
+  
   # This update the stored filename with the new flash video file
   def update_after_conversion
     #update_attribute(:filename, "#{filename}.flv")

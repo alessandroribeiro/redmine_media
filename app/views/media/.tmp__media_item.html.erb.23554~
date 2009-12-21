@@ -1,22 +1,24 @@
 <tr class="media_item">
+	<% if media_item.is_audio? %>
+     <td width="212">
+     	<a href="/media/view/<%= media_item.id %>"><img src="/plugin_assets/redmine_media/images/thumb_audio.png" width="212" height="150"/></a>		
+	 </td>
+	<% else %>
     <% if media_item.converted? %>
-    <td width="212">
-		<% if media_item.is_audio? %>
-     			<a href="/media/view/<%= media_item.id %>"><img src="/plugin_assets/redmine_media/images/thumb_audio.png" width="212" height="150"/></a>		
-	    <% else %>     	
-	     	<% if media_item.thumb_created? %>
-    	 		<a href="/media/view/<%= media_item.id %>"><img src="<%= media_item.thumb_url %>" width="212" height="150"/></a>		
-			<% else %>
-	 			<a href="/media/view/<%= media_item.id %>"><img src="/plugin_assets/redmine_media/images/thumb_conversion_in_progress.png" width="212" height="150"/></a>			
-			<% end %>
-	    <% end %>			
-	</td>
-	<% end %>
+     <td width="212">
+     	<% if media_item.thumb_created? %>
+     		<a href="/media/view/<%= media_item.id %>"><img src="<%= media_item.public_filename_for_thumb %>" width="212" height="150"/></a>		
+		<% else %>
+	 		<a href="/media/view/<%= media_item.id %>"><img src="/plugin_assets/redmine_media/images/thumb_conversion_in_progress.png" width="212" height="150"/></a>			
+		<% end %>
+	 </td>
+	 <% end %>
 	<% if !media_item.converted? %>
      <td width="212">
      	<img src="/plugin_assets/redmine_media/images/thumb_conversion_in_progress.png" width="212" height="150"/>		
 	 </td>
     <% end %>
+	<% end %>
 
 	<% if media_item.converted? %>	
 	 	<td valign="top">
