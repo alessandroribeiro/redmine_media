@@ -1,7 +1,7 @@
 class MediaFile < ActiveRecord::Base
   has_attachment :storage => :file_system, 
                  :max_size => 300.megabytes, 
-                 :content_type => ["audio/mpeg","video/x-flv", "video/x-msvideo", "video/mpeg", "video/x-ms-wmv", "video/quicktime"]
+                 :content_type => ["audio/mpeg","video/x-flv", "video/x-msvideo", "video/mpeg", "video/x-ms-wmv", "video/quicktime", "video/mp4"]
   
   belongs_to :user
   belongs_to :project
