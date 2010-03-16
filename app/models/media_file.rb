@@ -46,8 +46,15 @@ class MediaFile < ActiveRecord::Base
     return false
   end
 
+  def is_mp4?
+    if content_type == "video/mp4"
+      return true
+    end
+    return false
+  end
+
   def is_video_and_needs_conversion?
-    return (is_avi? or is_mpeg? or is_wmv? or is_mov?)
+    return (is_avi? or is_mpeg? or is_wmv? or is_mov? or is_mp4?)
   end
   
   def is_video?
