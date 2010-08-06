@@ -160,6 +160,13 @@ class MediaFile < ActiveRecord::Base
     return public_filename
   end
 
+  def filename_after_conversion
+    if is_video_and_needs_conversion?
+      return "#{filename}.flv"
+    end
+    return filename
+  end
+
   def public_filename_for_thumb
     if is_video_and_needs_conversion? or is_flv?
       return "#{public_filename}.thumb.jpg"
@@ -276,7 +283,7 @@ class MediaFile < ActiveRecord::Base
       s3_manager = S3MediaFileManager.new
       s3_manager.init
       three_hours = 3*60*60
-      url = s3_manager.url_for_s3(id,filename,three_hours)
+      url = s3_manager.url_for_s3(id,filename_after_conversion,three_hours)
       return url
     end
   end
