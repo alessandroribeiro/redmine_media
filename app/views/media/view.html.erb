@@ -6,7 +6,7 @@
 	<p class="view_media_item_name"><%= @media_file.name %></p>
     <% if @media_file.is_audio? %>
     <p>
-        <object type="application/x-shockwave-flash" width="400" height="20" data="/plugin_assets/redmine_media/swf/xspf_player_slim.swf?song_url=<%= CGI::escape(@media_file.media_url) %>&song_title=<%= @media_file.name %>">
+        <object type="application/x-shockwave-flash" width="400" height="20" data="/plugin_assets/redmine_media/swf/xspf_player_slim.swf?song_url=<%= @media_file.media_url %>&song_title=<%= @media_file.name %>">
             <param name="movie" value="/plugin_assets/redmine_media/swf/xspf_player_slim.swf?song_url=<%= CGI::escape(@media_file.media_url) %>&song_title=<%= @media_file.name %>" />
         </object>
     </p><% end %>
