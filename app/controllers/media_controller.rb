@@ -9,15 +9,6 @@ class MediaController < ApplicationController
     end
   end
 
-  def index2
-    @project = Project.find_by_identifier(params[:id])
-    if (User.current!=nil) and (@project.users.include? User.current)!=nil
-      @media_files = MediaFile.find_all_by_project_id @project.id, :order=>"created_on DESC" # @project.polls
-    else
-      render :action=>:not_allowed
-    end
-  end
-
   def view
     @media_file = MediaFile.find(params[:id])
     @project = @media_file.project
