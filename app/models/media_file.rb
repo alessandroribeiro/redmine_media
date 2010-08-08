@@ -101,10 +101,11 @@ class MediaFile < ActiveRecord::Base
         t_s3_media_path = "#{t_s3_media_path}.flv"
       end      
       s3_manager.init
+      puts "copying #{origin_filename} to s3 (#{t_s3_media_path})..."
       s3_manager.copy_to_s3(id,origin_filename)
       update_attribute(:s3_media_path,t_s3_media_path) 
 
-      puts "after transfer to s3"
+      puts "after copying media to s3"
     end
   end
 
@@ -127,9 +128,11 @@ class MediaFile < ActiveRecord::Base
         s3_manager = S3MediaFileManager.new
         s3_path_util = S3MediaPathUtil.new
         s3_manager.init
+        puts "before copying thumb to s3"
         s3_manager.copy_to_s3(id,@thumb_filename)
         t_s3_thumb_path = s3_path_util.s3_key_for_file(id,@thumb_filename)
         update_attribute(:s3_thumb_path,t_s3_thumb_path) 
+        puts "after copying thumb to s3"
       else        
         thumb_local_path = compute_original_local_filename + ".thumb.jpg"
       end
