@@ -1,0 +1,23 @@
+### From http://svn.geekdaily.org/public/rails/plugins/generally_useful/tasks/coverage_via_rcov.rake
+
+#this rake test is causing migrations to fail
+
+require "activerecord"
+
+### Inspired by http://blog.labratz.net/articles/2006/12/2/a-rake-task-for-rcov
+begin
+  require 'vendor/plugins/redmine_media/lib/s3_media_file_manager'
+  require File.join(File.dirname(__FILE__), '../app/model')
+  require "activerecord" 
+  require 'rubygems'  
+  
+  namespace :media do 
+    desc "Migrate all media files to s3"
+      task :migrate_to_s3 do
+        MediaFile.all do |media|
+          puts "media = #{media}"
+        end
+      end
+    end
+
+end
