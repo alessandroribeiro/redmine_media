@@ -117,6 +117,8 @@ class MediaFile < ActiveRecord::Base
       thumb_file_dir = local_path_util.local_media_complete_dir(id)
       t_local_path = thumb_file_dir + "/" + filename + ".thumb.jpg"
       update_attribute(:thumb_local_path,t_local_path)
+    else
+      puts "error generating thumb"
     end    
   end
 
